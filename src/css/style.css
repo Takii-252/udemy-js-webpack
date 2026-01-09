@@ -1,0 +1,84 @@
+/* common use => */
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    color:#fff;
+    border-radius: 0.3rem;
+}
+
+body{
+    background-color: #444;
+}
+
+h1{
+    font-size:2.5rem;
+    letter-spacing:0.2rem;
+}
+
+ul{
+    list-style: none;
+}
+
+select{
+    font-size: 1.2rem;
+    width: 20rem;
+    padding-left: 1.5rem;
+    text-align: left;
+    background-color:#000;
+}
+/* <= common use */
+
+/* section => */
+section{
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content:center;
+    align-items: center;
+    flex-direction: column;
+}
+
+section.active{
+    display: flex;
+}
+/* <= section */
+
+/* nav bar => */
+#nav{
+    width: 100vw;
+    height: 5vh;
+    min-height:2rem;
+    background-color: #222;
+    position: fixed;
+    z-index: 100;
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+}
+
+.nav-menu{
+    cursor: pointer;
+    padding: 0 1rem;
+    border-radius: 1rem;
+    transition: 0.3s;
+    user-select: none;
+}
+
+.nav-menu:hover{
+    color: #222;
+    background-color: #fff;
+}
+
+.nav-menu:active{
+    transform: scale(0.9);
+}
+
+.nav-menu.active{
+    color: #222;
+    background-color: #fff;
+}
+
+/* <= nav bar */
