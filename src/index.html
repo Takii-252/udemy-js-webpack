@@ -1,11 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> <!-- ページの言語を英語に設定 -->
   <head>
+    <!-- 文字のルールを「UTF-8」に設定（文字化けを防ぐためのおまじないです） -->
     <meta charset="UTF-8" />
+    
+    <!-- Internet Explorerという古いブラウザでも、なるべく最新の状態で表示させる設定 -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- スマホやタブレットで見ても、画面の幅に合わせてきれいに表示させる設定 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ブラウザのタブに表示されるこのページのタイトル -->
     <title>JS 5-Apps & Webpack</title>
+    
+    <!-- cssフォルダにある style.css というデザイン用のファイルを読み込む -->
     <link rel="stylesheet" href="./css/style.css" />
+    
+    <!-- jsフォルダにある index.js というプログラムのファイルを読み込む -->
+    <!-- type="module": ファイルを部品化して扱えるようにする設定 -->
+    <!-- defer: 画面（HTML）の読み込みが終わってからプログラムを実行する設定 -->
     <script src="./js/index.js" type="module" defer></script>
   </head>
 
@@ -28,14 +41,30 @@
       <section id="todo" class="app">
         <h1>TODO LIST</h1>
         <div>
-          <from class="td-search-form">
+          <!-- 検索用フォーム -->
+          <!-- form: 入力欄などをまとめる「入力フォーム」の箱 -->
+          <form class="td-search-form">
+            <!-- label: 何を入力する場所なのかを示す見出し -->
             <label class="td-label">SEARCH</label>
+            <!-- input: 実際に文字を入力する枠 -->
+            <!-- type="text": 普通のテキストを入力する設定 -->
+            <!-- placeholder: 何も入力していない時に薄く表示される説明文 -->
             <input
               type="text"
               class="td-search-input"
               placeholder="Search..."
             />
-          </from>
+          </form>
+
+          <!-- 追加（ADD）用フォーム -->
+          <form class="td-add-form">
+            <label class="td-label">ADD</label>
+            <input
+              type="text"
+              class="td-add-input"
+              placeholder="Add..."
+            />
+          </form>
         </div>
         <div class="todo-container">
           <h2>Remains to do</h2>
