@@ -47,6 +47,7 @@ addform.addEventListener("submit", (e) => {
     // これをしないと、送信した後も入力した文字がそのまま残ってしまいます
     addInput.value = "";
     updateLS();
+    updateTodo();
 
 })
 
@@ -77,7 +78,11 @@ function getTodoData() {
     // JSON.parse(...):
     // 取り出したのはただの「文字」なので、JavaScriptで使える「配列（リスト）」に戻します。
     // 「翻訳して戻す」作業です。（stringifyの逆）
-    return JSON.parse(localStorage.getItem("myTodo")); 
+    
+    // || [] の意味:
+    // もしローカルストレージにデータが何もない（null）場合、エラーにならないように
+    // 「空っぽの配列（[]）」を代わりに返す、という安全策です。
+    return JSON.parse(localStorage.getItem("myTodo")) || []; 
 }
 
 // -------------------------------------------------------------
@@ -87,7 +92,6 @@ function getTodoData() {
 function createTodoElement(todo) {
     // 1. <li>タグ（リストの項目）を新しく作る
     // （まだ画面には表示されず、メモリの中に浮いている状態）
-    // 1. <li>タグ（リストの項目）を新しく作る
     const todoItem = document.createElement("li");
     // "td-item" というクラス名をつけることで、CSSの「横並びレイアウト（flex）」などが適用されます
     todoItem.classList.add("td-item");
@@ -163,7 +167,68 @@ function createTodoElement(todo) {
         // 画面上の「完了リスト（donesUl）」の場所に表示する！
         donesUl.appendChild(todoItem);
     }
+
+    // -------------------------------------------------------------
+    // リスト項目（todoItem）がクリックされた時の処理
+    // -------------------------------------------------------------
+    todoItem.addEventListener("click", (e) => {
+        // e.target: 実際にクリックされた要素（ボタンや画像など）が入っています
+        
+        // 1. 「完了（isDone-btn）」ボタンが押された場合
+        if(e.target.classList.contains("isDone-btn")){
+            todo.isDone = true; // データの状態を「終わった（true）」にする
+        }
+        
+        // 2. 「元に戻す（undo-btn）」ボタンが押された場合
+        if(e.target.classList.contains("undo-btn")){
+            todo.isDone = false; // データの状態を「まだ（false）」に戻す
+        }
+        
+        // 3. 「編集（edit-btn）」ボタンが押された場合
+        if(e.target.classList.contains("edit-btn")){
+            // 編集ボタンの親（div）の、前の要素（pタグ）の文字を取得して、入力欄に入れる
+            // つまり、「今のTODOの内容」を入力欄にセットして、修正できるようにする
+            addInput.value = e.target.parentElement.previousElementSibling.textContent;
+            
+            // 下の削除と同じ処理。一度リストから消して、書き直したものを新しく追加するため。
+            todoData = todoData.filter(data => data !== todo);
+            
+            // 入力欄にカーソルを移動させる（すぐ入力できるように）
+            addInput.focus();
+        }
+        
+        // 4. 「削除（delete-btn）」ボタンが押された場合
+        if(e.target.classList.contains("delete-btn")){
+            // フィルター機能を使って、今のTODO（todo）以外のデータだけを残す
+            // 結果的に、今のTODOだけがリストから除外（削除）される
+            todoData = todoData.filter(data => data !== todo);
+        }
+        
+        // 最新の状態（完了になった、削除されたなど）をローカルストレージに保存し直す
+        updateLS();
+        updateTodo();
+        // 注意: この段階では画面はまだ更新されません（リロードが必要です）
+    })
 }
 
-createTodoElement({content: "remains to do", isDone: false});
-createTodoElement({content: "already done", isDone: true});
+// -------------------------------------------------------------
+// 関数: 画面（HTML）を最新の状態に更新する
+// -------------------------------------------------------------
+function updateTodo(){
+    // 1. 今表示されているリストを一旦全部消す（リセット）
+    // innerHTML = "" は「中身を空っぽにする」という意味
+    todosUl.innerHTML = "";
+    donesUl.innerHTML = "";
+    
+    // 2. 最新のデータをローカルストレージから取ってくる
+    todoData = getTodoData();
+    
+    // 3. データの数だけループして、リストを作り直す
+    // forEach: データが10個あれば10回繰り返す
+    todoData.forEach(todo => {
+        // ここでさっきの「HTMLを作る工場（createTodoElement）」に注文を出す
+        createTodoElement(todo);
+    })
+}
+
+updateTodo();
