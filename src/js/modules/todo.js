@@ -15,6 +15,9 @@ const todosUl = document.querySelector(".todos");
 // HTMLの「完了リスト（Already done）」を表示する場所（<ul class="dones">）を取得
 const donesUl = document.querySelector(".dones");
 
+// HTMLの「検索フォーム（td-search-form）」と「検索入力欄（td-search-input）」を取得
+const searchForm = document.querySelector(".td-search-form");
+const searchInput = document.querySelector(".td-search-input");
 
 // TODOリストの全データを保存するための「配列（リスト）」を用意する
 // 最初は空っぽの箱 []
@@ -232,3 +235,36 @@ function updateTodo(){
 }
 
 updateTodo();
+// -------------------------------------------------------------
+// 検索フォームで「送信（submit）」が押されてもページをリロードさせない
+// （ADDと同じパターン。リロードされると入力中のフィルターが消えてしまうため）
+// -------------------------------------------------------------
+searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+})
+
+// -------------------------------------------------------------
+// 検索欄でキーを離した（keyup）瞬間に、リアルタイムで絞り込みを行う
+// -------------------------------------------------------------
+searchInput.addEventListener("keyup", (e) => {
+    // 1. 検索欄に入力された文字を取得する
+    // .trim(): 前後の空白を消す
+    // .toLowerCase(): 大文字小文字を区別しないために、全部小文字に変換
+    const searchWord = searchInput.value.trim().toLowerCase();
+    
+    // 2. 画面上に表示されている全てのTODO項目（.td-item）を取得する
+    const todoItems = document.querySelectorAll(".td-item");
+    
+    // 3. 全てのTODO項目に対して、1つずつチェックする
+    todoItems.forEach(todoItem => {
+        // まず一旦「隠す」を解除する（表示状態に戻す）
+        todoItem.classList.remove("hide");
+        
+        // もし、その項目のテキストが検索ワードを含んでいなければ...
+        // .includes(): 「〜を含んでいるか？」をチェックする
+        if(!todoItem.textContent.toLowerCase().includes(searchWord)){
+            // 「hide」クラスを追加して隠す（CSSで display: none; になる）
+            todoItem.classList.add("hide");
+        }
+    })
+})
